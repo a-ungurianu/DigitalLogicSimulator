@@ -1,14 +1,15 @@
-class Connection {
+
+
+export class Connection {
     value:boolean;
     next:Component;
 }
 
-class Component {
+export class Component {
     inputs:Array<Connection>;
     outputs:Array<Connection>;
     evaluate:() => void;
     name:string;
-    isConnected:boolean = false;
 
     constructor(inputSize:number, outputSize:number) {
         this.inputs = new Array<Connection>();
@@ -24,14 +25,18 @@ class Component {
     //TODO: Implement fuctions to clear connections
     setInput(index:number, conn:Connection) {
         //TODO: Assert that index has to be smaller than inputSize
-        //TODO: Throw exception if connection is already made
+        if(this.inputs[index] != undefined) {
+            throw "Input slot " + index + " already occupied";
+        }
         this.inputs[index] = conn;
         conn.next = this;
     }
 
     setOutput(index:number, conn:Connection) {
         //TODO: Assert that index has to be smaller than outputSize
-        //TODO: Throw exception if connection is already made
+        if(this.outputs[index] != undefined) {
+            throw "Output slot " + index + " already occupied";
+        }
         this.outputs[index] = conn;
     }
 
@@ -56,7 +61,7 @@ class Component {
 
 }
 
-class True extends Component {
+export class True extends Component {
     constructor(id:string) {
         super(0,1);
         this.name="True_"+id;
@@ -68,7 +73,7 @@ class True extends Component {
     }
 }
 
-class False extends Component {
+export class False extends Component {
     constructor(id:string = "") {
         super(0,1);
         this.name="False_"+id;
@@ -80,7 +85,7 @@ class False extends Component {
     }
 }
 
-class Not extends Component {
+export class Not extends Component {
     constructor(id:string = "") {
         super(1,1);
         this.name = "Not_"+id;
@@ -92,7 +97,7 @@ class Not extends Component {
     }
 }
 
-class Or extends Component {
+export class Or extends Component {
     constructor(id:string = "") {
         super(2,1);
         this.name = "Or_"+id;
@@ -104,7 +109,7 @@ class Or extends Component {
     }
 }
 
-class And extends Component {
+export class And extends Component {
     constructor(id:string = "") {
         super(2,1);
         this.name = "And_"+id;
@@ -116,7 +121,7 @@ class And extends Component {
     }
 }
 
-class Printer extends Component {
+export class Printer extends Component {
     constructor(id:string = "") {
         super(1,0);
         this.name = "Printer_" + id;
@@ -128,37 +133,10 @@ class Printer extends Component {
 
 var connections = new Array<Connection>();
 
-function connect(from:Component, fromIdx:number, to:Component, toIdx:number) {
-    connections.push(new Connection);
-    from.setOutput(fromIdx,connections[connections.length-1]);
-    to.setInput(toIdx,connections[connections.length-1]);
-    to.isConnected = true;
-    from.isConnected = true;
-    //connections.push(conn);
+export function connect(from:Component, fromIdx:number, to:Component, toIdx:number) {
+    //connections.push(new Connection);
+    var conn = new Connection;
+    from.setOutput(fromIdx,conn);
+    to.setInput(toIdx,conn);
+    connections.push(conn);
 }
-
-var trueValue1 = new True("1");
-var trueValue2 = new True("2");
-var trueValue3 = new True("3");
-var falseValue1 = new False("1");
-var falseValue2 = new False("2");
-var falseValue3 = new False("3");
-
-var and = new And("1");
-var or = new Or("1");
-var not = new Not("1");
-var printer = new Printer("1");
-
-connect(falseValue1,0,not,0);
-connect(not,0,and,0);
-connect(trueValue2,0,and,1);
-connect(and,0,or,0);
-connect(falseValue2,0,or,1);
-connect(or,0,printer,0);
-
-falseValue1.update();
-falseValue2.update();
-falseValue3.update();
-trueValue1.update();
-trueValue2.update();
-trueValue3.update();
