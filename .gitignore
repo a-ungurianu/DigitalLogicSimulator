@@ -1,3 +1,4 @@
 .sublimets
 
 *.js
+.fuse_hidden*
