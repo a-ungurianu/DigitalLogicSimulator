@@ -23,7 +23,9 @@ module Simulator {
 
         //TODO: Implement fuctions to clear connections
         setInput(index:number, conn:Connection) {
-            //TODO: Assert that index has to be smaller than inputSize
+            if(!(0 <= index && index < this.inputs.length)) {
+                throw "Index greater than the number of slots available!";
+            }
             if(this.inputs[index] != undefined) {
                 throw "Input slot " + index + " already occupied";
             }
@@ -32,7 +34,9 @@ module Simulator {
         }
 
         setOutput(index:number, conn:Connection) {
-            //TODO: Assert that index has to be smaller than outputSize
+            if(!(0 <= index && index < this.outputs.length)) {
+                throw "Index greater than the number of slots available!";
+            }
             if(this.outputs[index] != undefined) {
                 throw "Output slot " + index + " already occupied";
             }
@@ -74,7 +78,6 @@ module Simulator {
     var connections = new Array<Connection>();
 
     export function connect(from:Component, fromIdx:number, to:Component, toIdx:number) {
-        //connections.push(new Connection);
         var conn = new Connection;
         from.setOutput(fromIdx,conn);
         to.setInput(toIdx,conn);
