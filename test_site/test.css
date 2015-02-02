@@ -1,0 +1,7 @@
+.switch {
+    border: 3px solid black;
+    position:absolute;
+    width: 20px;
+    height:20px;
+    background-color: green;
+}
