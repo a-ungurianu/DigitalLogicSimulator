@@ -1,44 +1,60 @@
 /// <reference path="../simulator/simulator.ts" />
+/// <reference path="../libs/jquery.d.ts" />
+/// <reference path="../libs/jsplumb.d.ts" />
+/// <reference path="../libs/jqueryui.d.ts" />
+class Switch extends Simulator.Component {
+    private value:boolean;
 
-class CheckboxInput extends Simulator.Component {
-    constructor(private checkbox, id:string = "") {
+    constructor(posx:number,posy:number, id:string = "") {
         super(0,1);
-        this.name = "CheckboxInput_" + id;
+        this.name = "switch" + id;
+        this.value = true;
+
+        this.contDiv = $("<div id="+this.name+"></div>").addClass("component").addClass("switch").offset({top:posx,left:posy})
+                                       .css("background-color","green");
+        this.contDiv.click({parent:this},function (event) {
+            if(event.data.parent.value) {
+                event.data.parent.value = false;
+                event.data.parent.contDiv.css("background-color","red");
+            }
+            else {
+                event.data.parent.value = true;
+                event.data.parent.contDiv.css("background-color","green");
+            }
+            event.data.parent.update();
+        })
+        $("#screen").append(this.contDiv);
+        jsPlumb.addEndpoint(this.contDiv,{endpoint:"Dot",anchor:"Right"});
+
         this.evaluate = function () {
             if(this.outputs[0] != undefined) {
-                this.outputs[0].value = this.checkbox.checked;
+                this.outputs[0].value = this.value;
             }
         }
     }
 }
 
 class SpanPrinter extends Simulator.Component {
-    constructor(private span, id:string = "") {
+    constructor(private span:JQuery, id:string = "") {
         super(1,0);
         this.name = "SpanPrinter";
         if(id != "") {
             name += "_" + id;
         }
         this.evaluate = function () {
-            this.span.innerText = this.inputs[0].value;
+            this.span.text(this.inputs[0].value);
         }
     }
 }
 
-window.onload = function () {
-    var input1_el = document.getElementsByName("input1")[0];
-    var input2_el = document.getElementsByName("input2")[0];
+jsPlumb.ready(function() {
 
 
-    var input1 = new CheckboxInput(document.getElementsByName("input1")[0],"1");
-    var input2 = new CheckboxInput(document.getElementsByName("input2")[0],"2");
+    jsPlumb.setContainer($("#screen"));
+    jsPlumb.draggable($(".component"));
+    //Stuff
 
-    input1_el.addEventListener("change",function() {input1.update();});
-    input2_el.addEventListener("change",function() {input2.update();});
+    console.log("jsPlumb is ready!");
 
-    var and = new Simulator.LogicalComponents.And("1");
-    var printer = new SpanPrinter(document.getElementById("output"),"1");
-    Simulator.connect(input1,0,and,0);
-    Simulator.connect(input2,0,and,1);
-    Simulator.connect(and,0,printer,0);
-}
+    var input1 = new Switch(20,20,"1");
+});
