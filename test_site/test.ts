@@ -1,60 +1,48 @@
-/// <reference path="../simulator/simulator.ts" />
+/// <reference path="../simulator/components.ts" />
 /// <reference path="../libs/jquery.d.ts" />
 /// <reference path="../libs/jsplumb.d.ts" />
 /// <reference path="../libs/jqueryui.d.ts" />
-class Switch extends Simulator.Component {
-    private value:boolean;
-
-    constructor(posx:number,posy:number, id:string = "") {
-        super(0,1);
-        this.name = "switch" + id;
-        this.value = true;
-
-        this.contDiv = $("<div id="+this.name+"></div>").addClass("component").addClass("switch").offset({top:posx,left:posy})
-                                       .css("background-color","green");
-        this.contDiv.click({parent:this},function (event) {
-            if(event.data.parent.value) {
-                event.data.parent.value = false;
-                event.data.parent.contDiv.css("background-color","red");
-            }
-            else {
-                event.data.parent.value = true;
-                event.data.parent.contDiv.css("background-color","green");
-            }
-            event.data.parent.update();
-        })
-        $("#screen").append(this.contDiv);
-        jsPlumb.addEndpoint(this.contDiv,{endpoint:"Dot",anchor:"Right"});
-
-        this.evaluate = function () {
-            if(this.outputs[0] != undefined) {
-                this.outputs[0].value = this.value;
-            }
-        }
-    }
-}
-
-class SpanPrinter extends Simulator.Component {
-    constructor(private span:JQuery, id:string = "") {
-        super(1,0);
-        this.name = "SpanPrinter";
-        if(id != "") {
-            name += "_" + id;
-        }
-        this.evaluate = function () {
-            this.span.text(this.inputs[0].value);
-        }
-    }
-}
 
 jsPlumb.ready(function() {
 
-
+    //TODO: Does nothing, find why!
     jsPlumb.setContainer($("#screen"));
-    jsPlumb.draggable($(".component"));
-    //Stuff
 
-    console.log("jsPlumb is ready!");
+    jsPlumb.doWhileSuspended(function () {
+        jsPlumb.bind("connection", function(info, originalEvent) {
+            var sourceid = info.source.id;
+            var targetid = info.target.id;
+            var sourceepid = +(info.sourceEndpoint.id.split("-")[1].substring(1));
+            var targetepid = +(info.targetEndpoint.id.split("-")[1].substring(1));
+            console.log(sourceepid,targetepid);
+            Simulator.connect(Simulator.getComponent(sourceid),sourceepid,Simulator.getComponent(targetid),targetepid);
+        });
 
-    var input1 = new Switch(20,20,"1");
+        jsPlumb.bind("connectionDetached", function(info, originalEvent) {
+            var sourceid = info.source.id;
+            var targetid = info.target.id;
+            var sourceepid = +(info.sourceEndpoint.id.split("-")[1].substring(1));
+            var targetepid = +(info.targetEndpoint.id.split("-")[1].substring(1));
+            console.log("Connection detached from ", sourceid, " to ",targetid);
+            Simulator.disconnect(Simulator.getComponent(sourceid),sourceepid,Simulator.getComponent(targetid),targetepid);
+        });
+
+        jsPlumb.bind("connectionMoved", function(info, originalEvent) {
+            var sourceid = info.originalSourceId;
+            var targetid = info.originalTargetId;
+            var sourceepid = +(info.originalSourceEndpoint.id.split("-")[1].substring(1));
+            var targetepid = +(info.originalTargetEndpoint.id.split("-")[1].substring(1));
+            console.log("Connection detached from ", sourceid, " to ",targetid);
+            Simulator.disconnect(Simulator.getComponent(sourceid),sourceepid,Simulator.getComponent(targetid),targetepid);
+        });
+    });
+
+    new Components.Switch(20,20);
+    new Components.Switch(30,30);
+    new Components.Xor(40,40);
+    new Components.And(40,40);
+    new Components.Splitter(40,40);
+    new Components.Splitter(40,40);
+    new Components.Light(200,90);
+    new Components.Light(200,90);
 });
