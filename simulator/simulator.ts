@@ -13,7 +13,12 @@ module Simulator {
         name:string;
         contDiv:JQuery;
 
-        constructor(inputSize:number, outputSize:number) {
+        constructor(inputSize:number, outputSize:number, compName:string) {
+
+            this.contDiv = $("<div id=" + this.name + "></div>").addClass("component").addClass(compName);
+            $("#screen").append(this.contDiv);
+            addComponent(this.name,this);
+
             this.inputs = new Array<Connection>();
             for(var i = 0; i < inputSize; ++i) {
                 this.inputs.push(undefined);
@@ -46,6 +51,20 @@ module Simulator {
             this.outputs[index] = conn;
         }
 
+        removeInput(index:number) {
+            if(!(0 <= index && index < this.inputs.length)) {
+                throw "Index greater than the number of slots available!";
+            }
+            this.inputs[index] = undefined;
+        }
+
+        removeOutput(index:number) {
+            if(!(0 <= index && index < this.outputs.length)) {
+                throw "Index greater than the number of slots available!";
+            }
+            this.outputs[index] = undefined;
+        }
+
         update() {
             var canUpdate:boolean = true;
             for(var i = 0; i < this.inputs.length; ++i) {
@@ -67,15 +86,37 @@ module Simulator {
         }
     }
 
-    var connections = new Array<Connection>();
+    // var connections = new Array<Connection>();
+    var activeComponents = {};
+
+    export function getComponent(name:string):Component {
+        if(activeComponents[name] == undefined) {
+            throw "Component doesn't exist!";
+        }
+        return activeComponents[name];
+    }
+
+    export function addComponent(name:string, component:Component):void {
+        if(activeComponents[name] != undefined) {
+            throw "Name already taken!";
+        }
+        activeComponents[name] = component;
+    }
 
     export function connect(from:Component, fromIdx:number, to:Component, toIdx:number) {
         var conn = new Connection;
+        console.log(from);
+        console.log(to);
         from.setOutput(fromIdx,conn);
         to.setInput(toIdx,conn);
-        connections.push(conn);
+        //connections.push(conn);
         from.update();
-        console.log("Connection " + connections.length + " from " + from.name +" to " + to.name + " made!");
+        //console.log("Connection " + connections.length + " from " + from.name +" to " + to.name + " made!");
+    }
+
+    export function disconnect(from:Component, fromIdx:number, to:Component, toIdx:number) {
+        from.removeOutput(fromIdx);
+        to.removeInput(toIdx);
     }
 }
 
