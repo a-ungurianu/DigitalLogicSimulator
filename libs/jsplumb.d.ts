@@ -91,7 +91,7 @@ interface ConnectParams {
 }
 
 interface DragOptions {
-    containment?: string;
+    containment?: string|JQuery;
 }
 
 interface SourceOptions {

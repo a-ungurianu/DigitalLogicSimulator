@@ -4,22 +4,22 @@ module Components {
 
     var linkColor = "#aaa";
     var outputEndpoint = {
-        endpoint:["Dot", { radius:5 }],
+        endpoint:["Dot", { radius:8 }],
         paintStyle:{ fillStyle:linkColor },
         isSource:true,
-        scope:"green",
+        scope:"logicConnections",
         connectorStyle:{ strokeStyle:linkColor, lineWidth:6 },
-        connector: ["Bezier", { curviness:63 } ],
+        connector: ["Bezier", { curviness:10 } ],
         maxConnections:1
     };
 
     var inputEndpoint = {
-        endpoint:["Dot", { radius:5}],
+        endpoint:["Dot", { radius:8}],
         paintStyle:{ fillStyle:linkColor },
         isTarget:true,
-        scope:"green",
+        scope:"logicConnections",
         connectorStyle:{ strokeStyle:linkColor, lineWidth:6 },
-        connector: ["Bezier", { curviness:63 } ],
+        connector: ["Bezier", { curviness:10 } ],
         maxConnections:1
     };
 
@@ -35,7 +35,7 @@ module Components {
 
             super(0,1,Switch.componentName);
             this.contDiv.css("background-color","red").offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv);
+            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
 
             this.contDiv.click({parent:this},function (event) {
                 if(event.data.parent.value) {
@@ -70,7 +70,7 @@ module Components {
             super(1,0,Light.componentName);
 
             this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv);
+            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Left"},inputEndpoint).id = this.name+"-i0";
 
@@ -84,7 +84,7 @@ module Components {
                 }
             }
         }
-        removeInput(index:number) {
+        removeInput(index:number):void {
             super.removeInput(index);
             this.contDiv.css("background-color","blue");
         }
@@ -100,7 +100,7 @@ module Components {
             super(0,1,True.componentName);
 
             this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv);
+            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
 
@@ -122,7 +122,7 @@ module Components {
             super(0,1,False.componentName);
 
             this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv);
+            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
 
@@ -143,7 +143,7 @@ module Components {
 
             super(1,1,Not.componentName);
             this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv);
+            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Left"},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
@@ -164,7 +164,7 @@ module Components {
 
             super(2,1,Or.componentName);
             this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv);
+            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"TopLeft"},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomLeft"},inputEndpoint).id = this.name+"-i1";
@@ -187,7 +187,7 @@ module Components {
 
             super(2,1,Xor.componentName);
             this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv);
+            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"TopLeft"},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomLeft"},inputEndpoint).id = this.name+"-i1";
@@ -210,7 +210,7 @@ module Components {
 
             super(2,1,And.componentName);
             this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv);
+            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"TopLeft"},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomLeft"},inputEndpoint).id = this.name+"-i1";
@@ -233,7 +233,7 @@ module Components {
 
             super(1,2,Splitter.componentName);
             this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv);
+            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"TopRight"},outputEndpoint).id = this.name+"-o0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomRight"},outputEndpoint).id = this.name+"-o1";
