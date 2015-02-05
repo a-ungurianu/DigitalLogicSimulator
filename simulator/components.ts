@@ -23,7 +23,22 @@ module Components {
         maxConnections:1
     };
 
-    export class Switch extends Simulator.Component {
+    class HTMLComponent extends Simulator.Component {
+        public contDiv:JQuery;
+        label:JQuery;
+        constructor(nInputs:number,nOutputs:number,posx:number,posy:number,compName:string) {
+            super(nInputs,nOutputs);
+            this.contDiv = $("<div id=" + this.name + "></div>").addClass("component").addClass(compName);
+            this.label = $("<span></span>");
+            $("#screen").append(this.contDiv);
+            this.contDiv.append(this.label);
+            Simulator.addComponent(this.name,this);
+            this.contDiv.offset({top:posy,left:posx});
+            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
+        }
+    }
+
+    export class Switch extends HTMLComponent {
         private value:boolean;
         static compCount = 0;
         static componentName = "switch";
@@ -33,9 +48,8 @@ module Components {
 
             this.value = false;
 
-            super(0,1,Switch.componentName);
-            this.contDiv.css("background-color","red").offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
+            super(0,1,posx,posy,Switch.componentName);
+            this.contDiv.css("background-color","red");
 
             this.contDiv.click({parent:this},function (event) {
                 if(event.data.parent.value) {
@@ -59,7 +73,7 @@ module Components {
         }
     }
 
-    export class Light extends Simulator.Component {
+    export class Light extends HTMLComponent {
         static compCount:number = 0;
         static componentName:string = "light";
 
@@ -67,10 +81,7 @@ module Components {
             this.name = Light.componentName + Light.compCount;
             Light.compCount+=1;
 
-            super(1,0,Light.componentName);
-
-            this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
+            super(1,0,posx,posy,Light.componentName);
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Left"},inputEndpoint).id = this.name+"-i0";
 
@@ -90,17 +101,15 @@ module Components {
         }
     }
 
-    export class True extends Simulator.Component {
+    export class True extends HTMLComponent {
         static compCount:number = 0;
         static componentName:string = "true";
         constructor(posx:number,posy:number) {
             this.name = True.componentName + True.compCount;
             True.compCount+=1;
 
-            super(0,1,True.componentName);
-
-            this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
+            super(0,1,posx,posy,True.componentName);
+            this.label.text("1");
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
 
@@ -112,20 +121,17 @@ module Components {
         }
     }
 
-    export class False extends Simulator.Component {
+    export class False extends HTMLComponent {
         static compCount:number = 0;
         static componentName:string = "false";
         constructor(posx:number,posy:number) {
             this.name = False.componentName + False.compCount;
             False.compCount+=1;
 
-            super(0,1,False.componentName);
-
-            this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
+            super(0,1,posx,posy,False.componentName);
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
-
+            this.label.text("0");
             this.evaluate = function() {
                 if(this.outputs[0] != undefined) {
                     this.outputs[0].value = false;
@@ -134,17 +140,16 @@ module Components {
         }
     }
 
-    export class Not extends Simulator.Component {
+    export class Not extends HTMLComponent {
         static compCount:number = 0;
         static componentName:string = "not";
         constructor(posx:number,posy:number) {
             this.name = Not.componentName + False.compCount;
             False.compCount+=1;
 
-            super(1,1,Not.componentName);
-            this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
+            super(1,1,posx,posy,Not.componentName);
 
+            this.label.text("NOT");
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Left"},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
             this.evaluate = function() {
@@ -155,16 +160,16 @@ module Components {
         }
     }
 
-    export class Or extends Simulator.Component {
+    export class Or extends HTMLComponent {
         static compCount:number = 0;
         static componentName:string = "or";
         constructor(posx:number,posy:number) {
             this.name = Or.componentName + Or.compCount;
             Or.compCount+=1;
 
-            super(2,1,Or.componentName);
-            this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
+            super(2,1,posx,posy,Or.componentName);
+
+            this.label.text("OR");
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"TopLeft"},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomLeft"},inputEndpoint).id = this.name+"-i1";
@@ -178,16 +183,16 @@ module Components {
         }
     }
 
-    export class Xor extends Simulator.Component {
+    export class Xor extends HTMLComponent {
         static compCount:number = 0;
         static componentName:string = "xor";
         constructor(posx:number,posy:number) {
             this.name = Xor.componentName + Xor.compCount;
             Xor.compCount+=1;
 
-            super(2,1,Xor.componentName);
-            this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
+            super(2,1,posx,posy,Xor.componentName);
+
+            this.label.text("XOR");
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"TopLeft"},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomLeft"},inputEndpoint).id = this.name+"-i1";
@@ -201,16 +206,16 @@ module Components {
         }
     }
 
-    export class And extends Simulator.Component {
+    export class And extends HTMLComponent {
         static compCount:number = 0;
         static componentName:string = "and";
         constructor(posx:number,posy:number) {
             this.name = And.componentName + And.compCount;
             And.compCount+=1;
 
-            super(2,1,And.componentName);
-            this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
+            super(2,1,posx,posy,And.componentName);
+
+            this.label.text("AND");
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"TopLeft"},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomLeft"},inputEndpoint).id = this.name+"-i1";
@@ -224,16 +229,16 @@ module Components {
         }
     }
 
-    export class Splitter extends Simulator.Component {
+    export class Splitter extends HTMLComponent {
         static compCount:number = 0;
         static componentName:string = "splitter";
         constructor(posx:number,posy:number) {
             this.name = Splitter.componentName + Splitter.compCount;
             Splitter.compCount+=1;
 
-            super(1,2,Splitter.componentName);
-            this.contDiv.offset({top:posy,left:posx});
-            jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
+            super(1,2,posx,posy,Splitter.componentName);
+
+            this.label.text("SPLIT");
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"TopRight"},outputEndpoint).id = this.name+"-o0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomRight"},outputEndpoint).id = this.name+"-o1";
