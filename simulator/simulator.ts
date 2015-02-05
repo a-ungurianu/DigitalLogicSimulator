@@ -11,13 +11,8 @@ module Simulator {
         outputs:Array<Connection>;
         evaluate:() => void;
         name:string;
-        contDiv:JQuery;
 
-        constructor(inputSize:number, outputSize:number, compName:string) {
-
-            this.contDiv = $("<div id=" + this.name + "></div>").addClass("component").addClass(compName);
-            $("#screen").append(this.contDiv);
-            addComponent(this.name,this);
+        constructor(inputSize:number, outputSize:number) {
 
             this.inputs = new Array<Connection>();
             for(var i = 0; i < inputSize; ++i) {
@@ -29,8 +24,7 @@ module Simulator {
             }
         }
 
-        //TODO: Implement fuctions to clear connections
-        setInput(index:number, conn:Connection) {
+        setInput(index:number, conn:Connection):void {
             if(!(0 <= index && index < this.inputs.length)) {
                 throw "Index greater than the number of slots available!";
             }
@@ -41,7 +35,7 @@ module Simulator {
             conn.next = this;
         }
 
-        setOutput(index:number, conn:Connection) {
+        setOutput(index:number, conn:Connection):void {
             if(!(0 <= index && index < this.outputs.length)) {
                 throw "Index greater than the number of slots available!";
             }
@@ -51,21 +45,21 @@ module Simulator {
             this.outputs[index] = conn;
         }
 
-        removeInput(index:number) {
+        removeInput(index:number):void {
             if(!(0 <= index && index < this.inputs.length)) {
                 throw "Index greater than the number of slots available!";
             }
             this.inputs[index] = undefined;
         }
 
-        removeOutput(index:number) {
+        removeOutput(index:number):void {
             if(!(0 <= index && index < this.outputs.length)) {
                 throw "Index greater than the number of slots available!";
             }
             this.outputs[index] = undefined;
         }
 
-        update() {
+        update():void {
             var canUpdate:boolean = true;
             for(var i = 0; i < this.inputs.length; ++i) {
                 if(this.inputs[i] == undefined || this.inputs[i].value == undefined) {
@@ -103,7 +97,9 @@ module Simulator {
         activeComponents[name] = component;
     }
 
-    export function connect(from:Component, fromIdx:number, to:Component, toIdx:number) {
+    // TODO: Add a removeComponent function
+
+    export function connect(from:Component, fromIdx:number, to:Component, toIdx:number):void {
         var conn = new Connection;
         console.log(from);
         console.log(to);
@@ -114,7 +110,7 @@ module Simulator {
         //console.log("Connection " + connections.length + " from " + from.name +" to " + to.name + " made!");
     }
 
-    export function disconnect(from:Component, fromIdx:number, to:Component, toIdx:number) {
+    export function disconnect(from:Component, fromIdx:number, to:Component, toIdx:number):void {
         from.removeOutput(fromIdx);
         to.removeInput(toIdx);
     }
