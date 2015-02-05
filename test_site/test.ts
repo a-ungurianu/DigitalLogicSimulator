@@ -37,12 +37,4 @@ jsPlumb.ready(function() {
         });
     });
 
-    new Components.Switch(20,20);
-    new Components.Switch(30,30);
-    new Components.Xor(40,40);
-    new Components.And(40,40);
-    new Components.Splitter(40,40);
-    new Components.Splitter(40,40);
-    new Components.Light(200,90);
-    new Components.Light(200,90);
 });

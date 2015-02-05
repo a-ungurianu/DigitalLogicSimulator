@@ -1,6 +1,11 @@
+body,html {
+    width: 99%;
+    height: 95%;
+}
+
 #screen {
-    width: 400px;
-    height: 300px;
+    width: 100%;
+    height: 95%;
     border: 2px solid navy;
 }
 
