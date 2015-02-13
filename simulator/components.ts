@@ -6,16 +6,18 @@ module Components {
     var outputEndpoint = {
         endpoint:["Dot", { radius:8 }],
         paintStyle:{ fillStyle:linkColor },
+        isTarget:true,
         isSource:true,
         scope:"logicConnections",
         connectorStyle:{ strokeStyle:linkColor, lineWidth:6 },
         connector: ["Bezier", { curviness:10 } ],
-        maxConnections:1
+        maxConnections:10
     };
 
     var inputEndpoint = {
         endpoint:["Dot", { radius:8}],
         paintStyle:{ fillStyle:linkColor },
+        //isSource:true,
         isTarget:true,
         scope:"logicConnections",
         connectorStyle:{ strokeStyle:linkColor, lineWidth:6 },
@@ -66,9 +68,7 @@ module Components {
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
 
             this.evaluate = function () {
-                if(this.outputs[0] != undefined) {
-                    this.outputs[0].value = this.value;
-                }
+                    this.outputValue[0] = this.value;
             }
         }
     }
@@ -87,7 +87,7 @@ module Components {
 
 
             this.evaluate = function () {
-                if(this.inputs[0].value) {
+                if(this.inputValue[0]) {
                     this.contDiv.css("background-color","green");
                 }
                 else {
@@ -114,9 +114,7 @@ module Components {
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
 
             this.evaluate = function() {
-                if(this.outputs[0] != undefined) {
-                    this.outputs[0].value = true;
-                }
+                this.outputValue[0] = true;
             }
         }
     }
@@ -133,9 +131,7 @@ module Components {
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
             this.label.text("0");
             this.evaluate = function() {
-                if(this.outputs[0] != undefined) {
-                    this.outputs[0].value = false;
-                }
+                this.outputs[0].value = false;
             }
         }
     }
@@ -153,9 +149,7 @@ module Components {
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Left"},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
             this.evaluate = function() {
-                if(this.outputs[0] != undefined) {
-                    this.outputs[0].value = !this.inputs[0].value;
-                }
+                this.outputValue[0] = !this.inputValue[0];
             }
         }
     }
@@ -176,9 +170,7 @@ module Components {
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
 
             this.evaluate = function() {
-                if(this.outputs[0] != undefined) {
-                    this.outputs[0].value = this.inputs[0].value || this.inputs[1].value;
-                }
+                this.outputValue[0] = this.inputValue[0] || this.inputValue[1];
             }
         }
     }
@@ -199,9 +191,7 @@ module Components {
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
 
             this.evaluate = function() {
-                if(this.outputs[0] != undefined) {
-                    this.outputs[0].value = this.inputs[0].value ^ this.inputs[1].value;
-                }
+                this.outputValue[0] = this.inputValue[0] ^ this.inputValue[1];
             }
         }
     }
@@ -222,36 +212,34 @@ module Components {
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
 
             this.evaluate = function() {
-                if(this.outputs[0] != undefined) {
-                    this.outputs[0].value = this.inputs[0].value && this.inputs[1].value;
-                }
+                this.outputValue[0] = this.inputValue[0] && this.inputValue[1];
             }
         }
     }
 
-    export class Splitter extends HTMLComponent {
-        static compCount:number = 0;
-        static componentName:string = "splitter";
-        constructor(posx:number,posy:number) {
-            this.name = Splitter.componentName + Splitter.compCount;
-            Splitter.compCount+=1;
+    // export class Splitter extends HTMLComponent {
+    //     static compCount:number = 0;
+    //     static componentName:string = "splitter";
+    //     constructor(posx:number,posy:number) {
+    //         this.name = Splitter.componentName + Splitter.compCount;
+    //         Splitter.compCount+=1;
 
-            super(1,2,posx,posy,Splitter.componentName);
+    //         super(1,2,posx,posy,Splitter.componentName);
 
-            this.label.text("SPLIT");
+    //         this.label.text("SPLIT");
 
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"TopRight"},outputEndpoint).id = this.name+"-o0";
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomRight"},outputEndpoint).id = this.name+"-o1";
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"Left"},inputEndpoint).id = this.name+"-10";
+    //         jsPlumb.addEndpoint(this.contDiv,{anchor:"TopRight"},outputEndpoint).id = this.name+"-o0";
+    //         jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomRight"},outputEndpoint).id = this.name+"-o1";
+    //         jsPlumb.addEndpoint(this.contDiv,{anchor:"Left"},inputEndpoint).id = this.name+"-10";
 
-            this.evaluate = function() {
-                if(this.outputs[0] != undefined) {
-                    this.outputs[0].value = this.inputs[0].value;
-                }
-                if(this.outputs[1] != undefined) {
-                    this.outputs[1].value = this.inputs[0].value;
-                }
-            }
-        }
-    }
+    //         this.evaluate = function() {
+    //             if(this.outputs[0] != undefined) {
+    //                 this.outputs[0].value = this.inputs[0].value;
+    //             }
+    //             if(this.outputs[1] != undefined) {
+    //                 this.outputs[1].value = this.inputs[0].value;
+    //             }
+    //         }
+    //     }
+    // }
 }
