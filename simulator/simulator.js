@@ -1,13 +1,9 @@
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
+/// <reference path="../libs/jquery.d.ts" />
 var Simulator;
 (function (Simulator) {
     var Connection = (function () {
         function Connection() {
+            this.value = false;
         }
         return Connection;
     })();
@@ -15,43 +11,72 @@ var Simulator;
     var Component = (function () {
         function Component(inputSize, outputSize) {
             this.inputs = new Array();
+            this.inputValue = new Array();
             for (var i = 0; i < inputSize; ++i) {
                 this.inputs.push(undefined);
+                this.inputValue.push(false);
             }
             this.outputs = new Array();
+            this.outputValue = new Array();
             for (var i = 0; i < outputSize; ++i) {
-                this.outputs.push(undefined);
+                this.outputs.push(Array());
+                this.outputValue.push(false);
             }
         }
-        //TODO: Implement fuctions to clear connections
         Component.prototype.setInput = function (index, conn) {
-            //TODO: Assert that index has to be smaller than inputSize
+            if (!(0 <= index && index < this.inputs.length)) {
+                throw "Index greater than the number of slots available!";
+            }
             if (this.inputs[index] != undefined) {
-                throw "Input slot " + index + " already occupied";
+                throw "Input slot is already occupied!";
             }
             this.inputs[index] = conn;
             conn.next = this;
         };
         Component.prototype.setOutput = function (index, conn) {
-            //TODO: Assert that index has to be smaller than outputSize
-            if (this.outputs[index] != undefined) {
-                throw "Output slot " + index + " already occupied";
+            if (!(0 <= index && index < this.outputs.length)) {
+                throw "Index greater than the number of slots available!";
             }
-            this.outputs[index] = conn;
+            this.outputs[index].push(conn);
+        };
+        Component.prototype.removeInput = function (index) {
+            if (!(0 <= index && index < this.inputs.length)) {
+                throw "Index greater than the number of slots available!";
+            }
+            if (this.inputs[index] == undefined) {
+                throw "Trying to delete an empty slot!";
+            }
+            this.inputs[index] = undefined;
+        };
+        Component.prototype.removeOutput = function (index, conn) {
+            if (!(0 <= index && index < this.outputs.length)) {
+                throw "Index greater than the number of slots available!";
+            }
+            var toRemove = this.outputs[index].indexOf(conn);
+            if (toRemove == -1) {
+                throw "The output connection that is being removed doesn't exist!";
+            }
+            else {
+                this.outputs[index].splice(toRemove, 1);
+            }
         };
         Component.prototype.update = function () {
             var canUpdate = true;
             for (var i = 0; i < this.inputs.length; ++i) {
                 if (this.inputs[i] == undefined || this.inputs[i].value == undefined) {
                     canUpdate = false;
-                    break;
+                }
+                else {
+                    this.inputValue[i] = this.inputs[i].value;
                 }
             }
             if (canUpdate) {
+                console.log(this.name + " updated");
                 this.evaluate();
                 for (var i = 0; i < this.outputs.length; ++i) {
-                    if (this.outputs[i] != undefined && this.outputs[i].next != undefined) {
-                        this.outputs[i].next.update();
+                    for (var j = 0; j < this.outputs[i].length; ++j) {
+                        this.outputs[i][j].value = this.outputValue[i];
+                        this.outputs[i][j].next.update();
                     }
                 }
             }
@@ -59,102 +84,37 @@ var Simulator;
         return Component;
     })();
     Simulator.Component = Component;
-    var True = (function (_super) {
-        __extends(True, _super);
-        function True(id) {
-            if (id === void 0) { id = ""; }
-            _super.call(this, 0, 1);
-            this.name = "True_" + id;
-            this.evaluate = function () {
-                if (this.outputs[0] != undefined) {
-                    this.outputs[0].value = true;
-                }
-            };
+    // var connections = new Array<Connection>();
+    var activeComponents = {};
+    function getComponent(name) {
+        if (activeComponents[name] == undefined) {
+            throw "Component doesn't exist!";
         }
-        return True;
-    })(Component);
-    Simulator.True = True;
-    var False = (function (_super) {
-        __extends(False, _super);
-        function False(id) {
-            if (id === void 0) { id = ""; }
-            _super.call(this, 0, 1);
-            this.name = "False_" + id;
-            this.evaluate = function () {
-                if (this.outputs[0] != undefined) {
-                    this.outputs[0].value = false;
-                }
-            };
+        return activeComponents[name];
+    }
+    Simulator.getComponent = getComponent;
+    function addComponent(name, component) {
+        if (activeComponents[name] != undefined) {
+            throw "Name already taken!";
         }
-        return False;
-    })(Component);
-    Simulator.False = False;
-    var Not = (function (_super) {
-        __extends(Not, _super);
-        function Not(id) {
-            if (id === void 0) { id = ""; }
-            _super.call(this, 1, 1);
-            this.name = "Not_" + id;
-            this.evaluate = function () {
-                if (this.outputs[0] != undefined) {
-                    this.outputs[0].value = !this.inputs[0].value;
-                }
-            };
-        }
-        return Not;
-    })(Component);
-    Simulator.Not = Not;
-    var Or = (function (_super) {
-        __extends(Or, _super);
-        function Or(id) {
-            if (id === void 0) { id = ""; }
-            _super.call(this, 2, 1);
-            this.name = "Or_" + id;
-            this.evaluate = function () {
-                if (this.outputs[0] != undefined) {
-                    this.outputs[0].value = this.inputs[0].value || this.inputs[1].value;
-                }
-            };
-        }
-        return Or;
-    })(Component);
-    Simulator.Or = Or;
-    var And = (function (_super) {
-        __extends(And, _super);
-        function And(id) {
-            if (id === void 0) { id = ""; }
-            _super.call(this, 2, 1);
-            this.name = "And_" + id;
-            this.evaluate = function () {
-                if (this.outputs[0] != undefined) {
-                    this.outputs[0].value = this.inputs[0].value && this.inputs[1].value;
-                }
-            };
-        }
-        return And;
-    })(Component);
-    Simulator.And = And;
-    var Printer = (function (_super) {
-        __extends(Printer, _super);
-        function Printer(id) {
-            if (id === void 0) { id = ""; }
-            _super.call(this, 1, 0);
-            this.name = "Printer_" + id;
-            this.evaluate = function () {
-                console.log(this.inputs[0].value);
-            };
-        }
-        return Printer;
-    })(Component);
-    Simulator.Printer = Printer;
-    var connections = new Array();
+        activeComponents[name] = component;
+    }
+    Simulator.addComponent = addComponent;
+    // TODO: Add a removeComponent function
     function connect(from, fromIdx, to, toIdx) {
-        //connections.push(new Connection);
         var conn = new Connection;
+        console.log(from);
+        console.log(to);
         from.setOutput(fromIdx, conn);
         to.setInput(toIdx, conn);
-        connections.push(conn);
+        //connections.push(conn);
+        from.update();
+        //console.log("Connection " + connections.length + " from " + from.name +" to " + to.name + " made!");
     }
     Simulator.connect = connect;
+    function disconnect(from, fromIdx, to, toIdx) {
+        from.removeOutput(fromIdx, to.inputs[toIdx]);
+        to.removeInput(toIdx);
+    }
+    Simulator.disconnect = disconnect;
 })(Simulator || (Simulator = {}));
-var trueValue = new Simulator.True();
