@@ -17,7 +17,6 @@ module Components {
     var inputEndpoint = {
         endpoint:["Dot", { radius:8}],
         paintStyle:{ fillStyle:linkColor },
-        //isSource:true,
         isTarget:true,
         scope:"logicConnections",
         connectorStyle:{ strokeStyle:linkColor, lineWidth:6 },
@@ -27,13 +26,10 @@ module Components {
 
     class HTMLComponent extends Simulator.Component {
         public contDiv:JQuery;
-        label:JQuery;
         constructor(nInputs:number,nOutputs:number,posx:number,posy:number,compName:string) {
             super(nInputs,nOutputs);
             this.contDiv = $("<div id=" + this.name + "></div>").addClass("component").addClass(compName);
-            this.label = $("<span></span>");
             $("#screen").append(this.contDiv);
-            this.contDiv.append(this.label);
             Simulator.addComponent(this.name,this);
             this.contDiv.offset({top:posy,left:posx});
             jsPlumb.draggable(this.contDiv, {containment:$("#screen")});
@@ -109,7 +105,6 @@ module Components {
             True.compCount+=1;
 
             super(0,1,posx,posy,True.componentName);
-            this.label.text("1");
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
 
@@ -129,7 +124,6 @@ module Components {
             super(0,1,posx,posy,False.componentName);
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
-            this.label.text("0");
             this.evaluate = function() {
                 this.outputs[0].value = false;
             }
@@ -140,14 +134,15 @@ module Components {
         static compCount:number = 0;
         static componentName:string = "not";
         constructor(posx:number,posy:number) {
-            this.name = Not.componentName + False.compCount;
-            False.compCount+=1;
+            this.name = Not.componentName + Not.compCount;
+            Not.compCount+=1;
 
             super(1,1,posx,posy,Not.componentName);
+            this.contDiv.append($("<img src=\"gates\\"+Not.componentName + ".png\"></>"));
 
-            this.label.text("NOT");
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Left"},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
+
             this.evaluate = function() {
                 this.outputValue[0] = !this.inputValue[0];
             }
@@ -162,11 +157,10 @@ module Components {
             Or.compCount+=1;
 
             super(2,1,posx,posy,Or.componentName);
+            this.contDiv.append($("<img src=\"gates\\"+ Or.componentName + ".png\"></>"))
 
-            this.label.text("OR");
-
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"TopLeft"},inputEndpoint).id = this.name+"-i0";
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomLeft"},inputEndpoint).id = this.name+"-i1";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.3,0,0]},inputEndpoint).id = this.name+"-i0";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.7,0,0]},inputEndpoint).id = this.name+"-i1";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
 
             this.evaluate = function() {
@@ -183,11 +177,10 @@ module Components {
             Xor.compCount+=1;
 
             super(2,1,posx,posy,Xor.componentName);
+            this.contDiv.append($("<img src=\"gates\\"+Xor.componentName + ".png\"></>"))
 
-            this.label.text("XOR");
-
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"TopLeft"},inputEndpoint).id = this.name+"-i0";
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomLeft"},inputEndpoint).id = this.name+"-i1";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.3,0,0]},inputEndpoint).id = this.name+"-i0";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.7,0,0]},inputEndpoint).id = this.name+"-i1";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
 
             this.evaluate = function() {
@@ -204,11 +197,10 @@ module Components {
             And.compCount+=1;
 
             super(2,1,posx,posy,And.componentName);
+            this.contDiv.append($("<img src=\"gates\\"+And.componentName + ".png\"></>"))
 
-            this.label.text("AND");
-
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"TopLeft"},inputEndpoint).id = this.name+"-i0";
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomLeft"},inputEndpoint).id = this.name+"-i1";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.3,0,0]},inputEndpoint).id = this.name+"-i0";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.7,0,0]},inputEndpoint).id = this.name+"-i1";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
 
             this.evaluate = function() {
@@ -226,7 +218,6 @@ module Components {
 
     //         super(1,2,posx,posy,Splitter.componentName);
 
-    //         this.label.text("SPLIT");
 
     //         jsPlumb.addEndpoint(this.contDiv,{anchor:"TopRight"},outputEndpoint).id = this.name+"-o0";
     //         jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomRight"},outputEndpoint).id = this.name+"-o1";
