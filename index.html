@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en-US">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width" />
+      <title>Simulator de Logica digitala</title>
+      <link rel="stylesheet" href="css/components.css">
+      <link rel="stylesheet" href="css/responsee.css">
+      <link rel="stylesheet" href="simulator/components.css">
+      <link rel="stylesheet" href="css/stuff.css">
+      <!-- CUSTOM STYLE -->  
+      <link rel="stylesheet" href="css/template-style.css">
+      <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+      <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+      <script type="text/javascript" src="js/modernizr.js"></script>
+      <script type="text/javascript" src="js/responsee.js"></script>
+      <script type="text/javascript" src="simulator/libs/jquery.jsPlumb-1.7.2-min.js"></script>
+      <script type="text/javascript" src="simulator/libs/jquery-ui.min.js"></script>
+      <script type="text/javascript" src="simulator/simulator.js"></script> 
+      <!--[if lt IE 9]> 
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> 
+      <![endif]--> 
+   </head>
+   <body class="size-1140">
+      <!-- TOP NAV WITH LOGO -->  
+      <header>
+         <nav>
+            <div class="line">
+               <div class="top-nav">              
+                  <div class="logo hide-l">
+                     <a href="index.html">Logic <br /><strong>SIM</strong></a>
+                  </div>                  
+                  <p class="nav-text">Custom menu text</p>
+                  <div class="top-nav s-12 l-5">
+                     <ul class="right top-ul chevron">
+                        <li><a href="index.html">Home</a>
+                        </li>
+                     </ul>
+                  </div>
+                  <ul class="s-12 l-2">
+                     <li class="logo hide-s">
+                        <a href="index.html">LOGIC <br /><strong>SIM</strong></a>
+                     </li>
+                  </ul>
+                  <div class="top-nav s-12 l-5">
+                     <ul class="top-ul chevron">
+                       <li>
+                           <a>Componente</a>			    
+                           <ul>
+                              <li><a href="components/and.html">AND</a>
+                              </li>
+                              <li><a href="components/or.html">OR</a>
+                              </li>
+                              <li><a href="components/xor.html">XOR</a>
+                              </li>
+                              <li><a href="components/not.html">NOT</a>
+                              </li>
+                           </ul>
+                        </li>
+                     </ul> 
+                  </div>
+               </div>
+            </div>
+         </nav>
+      </header>
+      <section>
+		<div id="head">
+        	<div class="line">
+               <h1>Simulator de logica digitala</h1>
+            </div>
+        </div>
+
+        <div id="first-block">
+         <nav id="controls">
+            <div class="line" id="control_wrap">
+               <div class="top-nav">                  
+                  <p class="nav-text">Custom menu text</p>
+                  <div class="top-nav s-12 l-12">
+                     <ul class="left top-ul chevron">
+                        <li><a onclick="new Components.And(30,30);">And</a></li>
+                        <li><a onclick="new Components.Or(30,30);">Or</a></li>
+                        <li><a onclick="new Components.Xor(30,30);">Xor</a></li>
+                        <li><a onclick="new Components.Not(30,30);">Not</a></li>
+                        <li><a onclick="new Components.Switch(30,30);">Buton</a></li>
+                        <li><a onclick="new Components.Light(30,30);">Bec</a></li>
+                        <li style="float:right"><a onclick='$("#screen").empty()'>Sterge Tot</a></li>
+                        
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </nav>
+         <div id="screen">
+         </div>
+        </div>
+    </section>
+      <!-- FOOTER -->   
+      <footer>
+         <div class="line">
+            <div class="s-12 l-6">
+               <p>Copyright 2015
+               </p>
+            </div>
+         </div>
+      </footer>
+   </body>
+</html>

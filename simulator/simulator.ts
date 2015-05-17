@@ -1,4 +1,6 @@
-/// <reference path="../libs/jquery.d.ts" />
+/// <reference path="libs/jquery.d.ts" />
+/// <reference path="libs/jsplumb.d.ts" />
+/// <reference path="libs/jqueryui.d.ts" />
 
 module Simulator {
     export class Connection {

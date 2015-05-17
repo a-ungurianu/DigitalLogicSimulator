@@ -1,0 +1,26 @@
+
+p#def {
+	font-size:1.7em;
+	text-align: left;
+}
+
+#sym {
+	margin-right: 14px;
+}
+
+#gate {
+	margin-right: 30px;
+}
+
+#controls {
+	top: 295px;
+}
+
+#control_wrap {
+	max-width: 100%;
+	padding: 0px;
+}
+
+.del {
+	background: none repeat 0px 0px red;
+}
