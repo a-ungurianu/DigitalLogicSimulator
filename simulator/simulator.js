@@ -181,7 +181,7 @@ var Components;
                 }
                 event.data.parent.update();
             });
-            jsPlumb.addEndpoint(this.contDiv, { anchor: "Bottom" }, outputEndpoint).id = this.name + "-o0";
+            jsPlumb.addEndpoint(this.contDiv, { anchor: "Right" }, outputEndpoint).id = this.name + "-o0";
             this.evaluate = function () {
                 this.outputValue[0] = this.value;
             };
@@ -198,7 +198,7 @@ var Components;
             Light.compCount += 1;
             _super.call(this, 1, 0, posx, posy, Light.componentName);
             this.contDiv.append($("<img src=\"simulator/gates/light_off.png\"></>"));
-            jsPlumb.addEndpoint(this.contDiv, { anchor: "Left" }, inputEndpoint).id = this.name + "-i0";
+            jsPlumb.addEndpoint(this.contDiv, { anchor: "Bottom" }, inputEndpoint).id = this.name + "-i0";
             this.evaluate = function () {
                 if (this.inputValue[0]) {
                     this.contDiv.children("img").attr("src", "simulator/gates/light_on.png");
