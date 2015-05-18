@@ -155,7 +155,7 @@ var Components;
             _super.call(this, nInputs, nOutputs);
             this.contDiv = $("<div id=" + this.name + "></div>").addClass("component").addClass(compName);
             $("#screen").append(this.contDiv);
-            spos = $("#screen").offset()
+            var spos = $("#screen").offset();
             Simulator.addComponent(this.name, this);
             this.contDiv.offset({ top: spos.top + posy, left: spos.left + posx });
             jsPlumb.draggable(this.contDiv, { containment: $("#screen") });
@@ -173,15 +173,15 @@ var Components;
             this.contDiv.click({ parent: this }, function (event) {
                 if (event.data.parent.value) {
                     event.data.parent.value = false;
-                    event.data.parent.contDiv.children("img").attr("src","simulator/gates/switch_off.png");
+                    event.data.parent.contDiv.children("img").attr("src", "simulator/gates/switch_off.png");
                 }
                 else {
                     event.data.parent.value = true;
-                    event.data.parent.contDiv.children("img").attr("src","simulator/gates/switch_on.png");
+                    event.data.parent.contDiv.children("img").attr("src", "simulator/gates/switch_on.png");
                 }
                 event.data.parent.update();
             });
-            jsPlumb.addEndpoint(this.contDiv, { anchor: "Right" }, outputEndpoint).id = this.name + "-o0";
+            jsPlumb.addEndpoint(this.contDiv, { anchor: "Bottom" }, outputEndpoint).id = this.name + "-o0";
             this.evaluate = function () {
                 this.outputValue[0] = this.value;
             };
@@ -198,64 +198,58 @@ var Components;
             Light.compCount += 1;
             _super.call(this, 1, 0, posx, posy, Light.componentName);
             this.contDiv.append($("<img src=\"simulator/gates/light_off.png\"></>"));
-            jsPlumb.addEndpoint(this.contDiv, { anchor: "Bottom" }, inputEndpoint).id = this.name + "-i0";
+            jsPlumb.addEndpoint(this.contDiv, { anchor: "Left" }, inputEndpoint).id = this.name + "-i0";
             this.evaluate = function () {
                 if (this.inputValue[0]) {
-                    this.contDiv.children("img").attr("src","simulator/gates/light_on.png");
+                    this.contDiv.children("img").attr("src", "simulator/gates/light_on.png");
                 }
                 else {
-                    this.contDiv.children("img").attr("src","simulator/gates/light_off.png");
+                    this.contDiv.children("img").attr("src", "simulator/gates/light_off.png");
                 }
             };
         }
         Light.prototype.removeInput = function (index) {
             _super.prototype.removeInput.call(this, index);
-            this.contDiv.css("background-color", "blue");
+            this.contDiv.children("img").attr("src", "simulator/gates/light_off.png");
         };
         Light.compCount = 0;
         Light.componentName = "light";
         return Light;
     })(HTMLComponent);
     Components.Light = Light;
-    var True = (function (_super) {
-        __extends(True, _super);
-        function True(posx, posy) {
-            this.name = True.componentName + True.compCount;
-            True.compCount += 1;
-            _super.call(this, 0, 1, posx, posy, True.componentName);
-            jsPlumb.addEndpoint(this.contDiv, { anchor: "Right" }, outputEndpoint).id = this.name + "-o0";
-            this.evaluate = function () {
-                this.outputValue[0] = true;
-            };
-        }
-        True.compCount = 0;
-        True.componentName = "true";
-        return True;
-    })(HTMLComponent);
-    Components.True = True;
-    var False = (function (_super) {
-        __extends(False, _super);
-        function False(posx, posy) {
-            this.name = False.componentName + False.compCount;
-            False.compCount += 1;
-            _super.call(this, 0, 1, posx, posy, False.componentName);
-            jsPlumb.addEndpoint(this.contDiv, { anchor: "Right" }, outputEndpoint).id = this.name + "-o0";
-            this.evaluate = function () {
-                this.outputs[0].value = false;
-            };
-        }
-        False.compCount = 0;
-        False.componentName = "false";
-        return False;
-    })(HTMLComponent);
-    Components.False = False;
+    // export class True extends HTMLComponent {
+    //     static compCount:number = 0;
+    //     static componentName:string = "true";
+    //     constructor(posx:number,posy:number) {
+    //         this.name = True.componentName + True.compCount;
+    //         True.compCount+=1;
+    //         super(0,1,posx,posy,True.componentName);
+    //         jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
+    //         this.evaluate = function() {
+    //             this.outputValue[0] = true;
+    //         }
+    //     }
+    // }
+    // export class False extends HTMLComponent {
+    //     static compCount:number = 0;
+    //     static componentName:string = "false";
+    //     constructor(posx:number,posy:number) {
+    //         this.name = False.componentName + False.compCount;
+    //         False.compCount+=1;
+    //         super(0,1,posx,posy,False.componentName);
+    //         jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
+    //         this.evaluate = function() {
+    //             this.outputs[0].value = false;
+    //         }
+    //     }
+    // }
     var Not = (function (_super) {
         __extends(Not, _super);
         function Not(posx, posy) {
             this.name = Not.componentName + Not.compCount;
             Not.compCount += 1;
             _super.call(this, 1, 1, posx, posy, Not.componentName);
-            this.contDiv.append($("<img src=\"simulator/gates/" + Not.componentName + ".png\"></>"));
+            this.contDiv.append($("<img src=\"gates\\" + Not.componentName + ".png\"></>"));
             jsPlumb.addEndpoint(this.contDiv, { anchor: "Left" }, inputEndpoint).id = this.name + "-i0";
             jsPlumb.addEndpoint(this.contDiv, { anchor: "Right" }, outputEndpoint).id = this.name + "-o0";
             this.evaluate = function () {
@@ -273,7 +267,7 @@ var Components;
             this.name = Or.componentName + Or.compCount;
             Or.compCount += 1;
             _super.call(this, 2, 1, posx, posy, Or.componentName);
-            this.contDiv.append($("<img src=\"simulator/gates/" + Or.componentName + ".png\"></>"));
+            this.contDiv.append($("<img src=\"gates\\" + Or.componentName + ".png\"></>"));
             jsPlumb.addEndpoint(this.contDiv, { anchor: [0, 0.3, 0, 0] }, inputEndpoint).id = this.name + "-i0";
             jsPlumb.addEndpoint(this.contDiv, { anchor: [0, 0.7, 0, 0] }, inputEndpoint).id = this.name + "-i1";
             jsPlumb.addEndpoint(this.contDiv, { anchor: "Right" }, outputEndpoint).id = this.name + "-o0";
@@ -292,7 +286,7 @@ var Components;
             this.name = Xor.componentName + Xor.compCount;
             Xor.compCount += 1;
             _super.call(this, 2, 1, posx, posy, Xor.componentName);
-            this.contDiv.append($("<img src=\"simulator/gates/" + Xor.componentName + ".png\"></>"));
+            this.contDiv.append($("<img src=\"gates\\" + Xor.componentName + ".png\"></>"));
             jsPlumb.addEndpoint(this.contDiv, { anchor: [0, 0.3, 0, 0] }, inputEndpoint).id = this.name + "-i0";
             jsPlumb.addEndpoint(this.contDiv, { anchor: [0, 0.7, 0, 0] }, inputEndpoint).id = this.name + "-i1";
             jsPlumb.addEndpoint(this.contDiv, { anchor: "Right" }, outputEndpoint).id = this.name + "-o0";
@@ -311,7 +305,7 @@ var Components;
             this.name = And.componentName + And.compCount;
             And.compCount += 1;
             _super.call(this, 2, 1, posx, posy, And.componentName);
-            this.contDiv.append($("<img src=\"simulator/gates/" + And.componentName + ".png\"></>"));
+            this.contDiv.append($("<img src=\"gates\\" + And.componentName + ".png\"></>"));
             jsPlumb.addEndpoint(this.contDiv, { anchor: [0, 0.3, 0, 0] }, inputEndpoint).id = this.name + "-i0";
             jsPlumb.addEndpoint(this.contDiv, { anchor: [0, 0.7, 0, 0] }, inputEndpoint).id = this.name + "-i1";
             jsPlumb.addEndpoint(this.contDiv, { anchor: "Right" }, outputEndpoint).id = this.name + "-o0";
@@ -325,6 +319,26 @@ var Components;
     })(HTMLComponent);
     Components.And = And;
 })(Components || (Components = {}));
+// export class Splitter extends HTMLComponent {
+//     static compCount:number = 0;
+//     static componentName:string = "splitter";
+//     constructor(posx:number,posy:number) {
+//         this.name = Splitter.componentName + Splitter.compCount;
+//         Splitter.compCount+=1;
+//         super(1,2,posx,posy,Splitter.componentName);
+//         jsPlumb.addEndpoint(this.contDiv,{anchor:"TopRight"},outputEndpoint).id = this.name+"-o0";
+//         jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomRight"},outputEndpoint).id = this.name+"-o1";
+//         jsPlumb.addEndpoint(this.contDiv,{anchor:"Left"},inputEndpoint).id = this.name+"-10";
+//         this.evaluate = function() {
+//             if(this.outputs[0] != undefined) {
+//                 this.outputs[0].value = this.inputs[0].value;
+//             }
+//             if(this.outputs[1] != undefined) {
+//                 this.outputs[1].value = this.inputs[0].value;
+//             }
+//         }
+//     }
+// }
 jsPlumb.ready(function () {
     jsPlumb.setContainer($("#screen"));
     jsPlumb.doWhileSuspended(function () {
@@ -333,7 +347,7 @@ jsPlumb.ready(function () {
             var targetid = info.target.id;
             var sourceepid = +(info.sourceEndpoint.id.split("-")[1].substring(1));
             var targetepid = +(info.targetEndpoint.id.split("-")[1].substring(1));
-            console.log(sourceepid, targetepid);
+            console.log("Connection detached from ", sourceid, "(", sourceepid, ") to ", targetid, "(", targetepid, ").");
             //Simulator.connect(Simulator.getComponent(targetid),targetepid,Simulator.getComponent(sourceid),sourceepid);
             Simulator.connect(Simulator.getComponent(sourceid), sourceepid, Simulator.getComponent(targetid), targetepid);
         });
