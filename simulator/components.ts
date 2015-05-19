@@ -141,7 +141,7 @@ module Components {
             Not.compCount+=1;
 
             super(1,1,posx,posy,Not.componentName);
-            this.contDiv.append($("<img src=\"gates\\"+Not.componentName + ".png\"></>"));
+            this.contDiv.append($("<img src=\"simulator/gates/"+Not.componentName + ".png\"></>"));
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Left"},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
@@ -160,7 +160,7 @@ module Components {
             Or.compCount+=1;
 
             super(2,1,posx,posy,Or.componentName);
-            this.contDiv.append($("<img src=\"gates\\"+ Or.componentName + ".png\"></>"))
+            this.contDiv.append($("<img src=\"simulator/"+ Or.componentName + ".png\"></>"))
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.3,0,0]},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.7,0,0]},inputEndpoint).id = this.name+"-i1";
@@ -180,7 +180,7 @@ module Components {
             Xor.compCount+=1;
 
             super(2,1,posx,posy,Xor.componentName);
-            this.contDiv.append($("<img src=\"gates\\"+Xor.componentName + ".png\"></>"))
+            this.contDiv.append($("<img src=\"simulator/gates/"+Xor.componentName + ".png\"></>"))
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.3,0,0]},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.7,0,0]},inputEndpoint).id = this.name+"-i1";
@@ -200,7 +200,7 @@ module Components {
             And.compCount+=1;
 
             super(2,1,posx,posy,And.componentName);
-            this.contDiv.append($("<img src=\"gates\\"+And.componentName + ".png\"></>"))
+            this.contDiv.append($("<img src=\"simulator/gates/"+And.componentName + ".png\"></>"))
 
             jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.3,0,0]},inputEndpoint).id = this.name+"-i0";
             jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.7,0,0]},inputEndpoint).id = this.name+"-i1";
