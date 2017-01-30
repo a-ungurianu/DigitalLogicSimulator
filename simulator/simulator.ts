@@ -3,6 +3,9 @@
 /// <reference path="libs/jqueryui.d.ts" />
 
 module Simulator {
+  /**
+  *
+  */
     export class Connection {
         constructor() {
             this.value = false
@@ -16,6 +19,8 @@ module Simulator {
         outputs:Array<Array<Connection>>;
         inputValue:Array<boolean>;
         outputValue:Array<boolean>;
+
+        // Function that updates the outputs from the given inputs
         evaluate:() => void;
         name:string;
 
@@ -136,5 +141,3 @@ module Simulator {
         to.removeInput(toIdx);
     }
 }
-
-

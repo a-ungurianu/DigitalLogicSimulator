@@ -3,7 +3,7 @@
 module Components {
 
     var linkColor = "#aaa";
-    var outputEndpoint = {
+    var outputEndpointStyle = {
         endpoint:["Dot", { radius:8 }],
         paintStyle:{ fillStyle:linkColor },
         isTarget:true,
@@ -14,7 +14,7 @@ module Components {
         maxConnections:10
     };
 
-    var inputEndpoint = {
+    var inputEndpointStyle = {
         endpoint:["Dot", { radius:8}],
         paintStyle:{ fillStyle:linkColor },
         isTarget:true,
@@ -24,6 +24,7 @@ module Components {
         maxConnections:1
     };
 
+    /** This abstract class adds a view layer to the logic component */
     class HTMLComponent extends Simulator.Component {
         public contDiv:JQuery;
         constructor(nInputs:number,nOutputs:number,posx:number,posy:number,compName:string) {
@@ -38,6 +39,9 @@ module Components {
     }
 
     export class Switch extends HTMLComponent {
+        // Counter for the number of components of this type.
+        // Used for making unique css ids for each of the endpoints.
+
         private value:boolean;
         static compCount = 0;
         static componentName = "switch";
@@ -63,7 +67,7 @@ module Components {
                 event.data.parent.update();
             });
 
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpointStyle).id = this.name+"-o0";
 
             this.evaluate = function () {
                     this.outputValue[0] = this.value;
@@ -72,6 +76,9 @@ module Components {
     }
 
     export class Light extends HTMLComponent {
+        // Counter for the number of components of this type.
+        // Used for making unique css ids for each of the endpoints.
+
         static compCount:number = 0;
         static componentName:string = "light";
 
@@ -83,7 +90,7 @@ module Components {
 
             this.contDiv.append($("<img src=\"simulator/gates/light_off.png\"></>"));
 
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"Bottom"},inputEndpoint).id = this.name+"-i0";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:"Bottom"},inputEndpointStyle).id = this.name+"-i0";
 
             this.evaluate = function () {
                 if (this.inputValue[0]) {
@@ -100,40 +107,10 @@ module Components {
         }
     }
 
-    // export class True extends HTMLComponent {
-    //     static compCount:number = 0;
-    //     static componentName:string = "true";
-    //     constructor(posx:number,posy:number) {
-    //         this.name = True.componentName + True.compCount;
-    //         True.compCount+=1;
-
-    //         super(0,1,posx,posy,True.componentName);
-
-    //         jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
-
-    //         this.evaluate = function() {
-    //             this.outputValue[0] = true;
-    //         }
-    //     }
-    // }
-
-    // export class False extends HTMLComponent {
-    //     static compCount:number = 0;
-    //     static componentName:string = "false";
-    //     constructor(posx:number,posy:number) {
-    //         this.name = False.componentName + False.compCount;
-    //         False.compCount+=1;
-
-    //         super(0,1,posx,posy,False.componentName);
-
-    //         jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
-    //         this.evaluate = function() {
-    //             this.outputs[0].value = false;
-    //         }
-    //     }
-    // }
-
     export class Not extends HTMLComponent {
+        // Counter for the number of components of this type.
+        // Used for making unique css ids for each of the endpoints.
+
         static compCount:number = 0;
         static componentName:string = "not";
         constructor(posx:number,posy:number) {
@@ -143,8 +120,8 @@ module Components {
             super(1,1,posx,posy,Not.componentName);
             this.contDiv.append($("<img src=\"gates\\"+Not.componentName + ".png\"></>"));
 
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"Left"},inputEndpoint).id = this.name+"-i0";
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:"Left"},inputEndpointStyle).id = this.name+"-i0";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpointStyle).id = this.name+"-o0";
 
             this.evaluate = function() {
                 this.outputValue[0] = !this.inputValue[0];
@@ -153,6 +130,9 @@ module Components {
     }
 
     export class Or extends HTMLComponent {
+        // Counter for the number of components of this type.
+        // Used for making unique css ids for each of the endpoints.
+
         static compCount:number = 0;
         static componentName:string = "or";
         constructor(posx:number,posy:number) {
@@ -162,9 +142,9 @@ module Components {
             super(2,1,posx,posy,Or.componentName);
             this.contDiv.append($("<img src=\"gates\\"+ Or.componentName + ".png\"></>"))
 
-            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.3,0,0]},inputEndpoint).id = this.name+"-i0";
-            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.7,0,0]},inputEndpoint).id = this.name+"-i1";
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.3,0,0]},inputEndpointStyle).id = this.name+"-i0";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.7,0,0]},inputEndpointStyle).id = this.name+"-i1";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpointStyle).id = this.name+"-o0";
 
             this.evaluate = function() {
                 this.outputValue[0] = this.inputValue[0] || this.inputValue[1];
@@ -173,6 +153,8 @@ module Components {
     }
 
     export class Xor extends HTMLComponent {
+        // Counter for the number of components of this type.
+        // Used for making unique css ids for each of the endpoints.
         static compCount:number = 0;
         static componentName:string = "xor";
         constructor(posx:number,posy:number) {
@@ -182,9 +164,9 @@ module Components {
             super(2,1,posx,posy,Xor.componentName);
             this.contDiv.append($("<img src=\"gates\\"+Xor.componentName + ".png\"></>"))
 
-            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.3,0,0]},inputEndpoint).id = this.name+"-i0";
-            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.7,0,0]},inputEndpoint).id = this.name+"-i1";
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.3,0,0]},inputEndpointStyle).id = this.name+"-i0";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.7,0,0]},inputEndpointStyle).id = this.name+"-i1";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpointStyle).id = this.name+"-o0";
 
             this.evaluate = function() {
                 this.outputValue[0] = this.inputValue[0] ^ this.inputValue[1];
@@ -193,6 +175,9 @@ module Components {
     }
 
     export class And extends HTMLComponent {
+        // Counter for the number of components of this type.
+        // Used for making unique css ids for each of the endpoints.
+
         static compCount:number = 0;
         static componentName:string = "and";
         constructor(posx:number,posy:number) {
@@ -202,40 +187,58 @@ module Components {
             super(2,1,posx,posy,And.componentName);
             this.contDiv.append($("<img src=\"gates\\"+And.componentName + ".png\"></>"))
 
-            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.3,0,0]},inputEndpoint).id = this.name+"-i0";
-            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.7,0,0]},inputEndpoint).id = this.name+"-i1";
-            jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpoint).id = this.name+"-o0";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.3,0,0]},inputEndpointStyle).id = this.name+"-i0";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:[0,0.7,0,0]},inputEndpointStyle).id = this.name+"-i1";
+            jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpointStyle).id = this.name+"-o0";
 
             this.evaluate = function() {
                 this.outputValue[0] = this.inputValue[0] && this.inputValue[1];
             }
         }
     }
+
+// Components used for debug
+
+    export class True extends HTMLComponent {
+        // Counter for the number of components of this type.
+        // Used for making unique css ids for each of the endpoints.
+
+        static compCount:number = 0;
+        static componentName:string = "true";
+        constructor(posx:number,posy:number) {
+            this.name = True.componentName + True.compCount;
+            True.compCount+=1;
+
+            super(0,1,posx,posy,True.componentName);
+
+            jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpointStyle).id = this.name+"-o0";
+
+            this.evaluate = function() {
+                this.outputValue[0] = true;
+            }
+        }
+    }
+
+    export class False extends HTMLComponent {
+        // Counter for the number of components of this type.
+        // Used for making unique css ids for each of the endpoints.
+        
+        static compCount:number = 0;
+        static componentName:string = "false";
+        constructor(posx:number,posy:number) {
+            this.name = False.componentName + False.compCount;
+            False.compCount+=1;
+
+            super(0,1,posx,posy,False.componentName);
+
+            jsPlumb.addEndpoint(this.contDiv,{anchor:"Right"},outputEndpointStyle).id = this.name+"-o0";
+            this.evaluate = function() {
+                this.outputs[0].value = false;
+            }
+        }
+    }
+
 }
-    // export class Splitter extends HTMLComponent {
-    //     static compCount:number = 0;
-    //     static componentName:string = "splitter";
-    //     constructor(posx:number,posy:number) {
-    //         this.name = Splitter.componentName + Splitter.compCount;
-    //         Splitter.compCount+=1;
-
-    //         super(1,2,posx,posy,Splitter.componentName);
-
-
-    //         jsPlumb.addEndpoint(this.contDiv,{anchor:"TopRight"},outputEndpoint).id = this.name+"-o0";
-    //         jsPlumb.addEndpoint(this.contDiv,{anchor:"BottomRight"},outputEndpoint).id = this.name+"-o1";
-    //         jsPlumb.addEndpoint(this.contDiv,{anchor:"Left"},inputEndpoint).id = this.name+"-10";
-
-    //         this.evaluate = function() {
-    //             if(this.outputs[0] != undefined) {
-    //                 this.outputs[0].value = this.inputs[0].value;
-    //             }
-    //             if(this.outputs[1] != undefined) {
-    //                 this.outputs[1].value = this.inputs[0].value;
-    //             }
-    //         }
-    //     }
-    // }
 
 jsPlumb.ready(function() {
 
